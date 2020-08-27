@@ -1,0 +1,464 @@
+.calender_bg{
+  font-family: Arial;
+  font-weight: bold;
+  display: none;
+  background:rgba(198,198,198,0.7); width:100%; height:100vh; position:fixed; top:0;
+}
+.fmbox {
+  width:50%;  display:flex;
+  margin:0 auto 0 auto;
+  height: 80vh;
+  position: relative;
+  pointer-events: none;
+  touch-action: none;
+}
+#calender{
+  pointer-events: auto;
+  touch-action: auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  width: 100%;
+  z-index:1;
+  background: #EFEFEF;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-content: flex-start;
+  border-radius: 20px;
+  border-style: solid;
+  border-width: 2px ;
+  box-shadow: 5px 5px 15px grey;
+  /* overflow: hidden; */
+}
+.cal-topbar{
+  position: relative;
+  flex-grow: 1;
+  padding-top: calc(1/6 * 100%);
+  display: flex;
+  background: #373737;
+  color: white;
+  border-style: solid;
+  padding-left: 30px;
+  border-radius: 18px 18px 0 0;
+  border-width: 0 0 2px 0;
+  border-color: black;
+}
+.unable_sl {
+  /* ทำให้ไม่สามารถ select element content นี้ได้ */
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none;
+}
+.cal-topbar-mon{
+  cursor: pointer;
+  position: absolute;
+  width: 60%;
+  height: 100%;
+  top: 0%;
+  left: 0%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-style: solid;
+  border-width: 0 2px 0 0;
+  border-color: black;
+}
+.cal-topbar-yea{
+  cursor: pointer;
+  position: absolute;
+  width: 40%;
+  height: 100%;
+  top: 0%;
+  left: 60%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.monthoption{
+  pointer-events: none;
+  touch-action: none;
+  position: absolute;
+  width: 60%;
+  height: 600%;
+  top: 0%;
+  left: 0%;
+  display: none;
+  background: #373737;
+  z-index: 5;
+  overflow: hidden;
+  margin-left: -1px;
+  border-radius: 19px 0 5px 5px;
+  border-style: solid;
+  border-color: grey;
+  border-width: 0 1px 1px 1px ;
+  box-shadow: 2px 2px 5px grey;
+}
+
+.movable-mon {
+  pointer-events: auto;
+  touch-action: auto;
+  top: 100%;
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+.monthobj {
+  cursor: pointer;
+  border-style: solid;
+  border-color: #C6C6C6;
+  border-width: 0 0 1px 0;
+  width: 100%;
+  height: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.monthobj:hover{
+  background: black;
+  border-width:1px;
+  z-index: 6;
+  animation-name: monhov;
+  animation-duration: 1s;
+  animation-iteration-count: 2;
+  animation-direction: alternate;
+  animation-timing-function: ease-out;
+}
+@keyframes monhov {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.1); }
+}
+.yeaoption{
+  position: absolute;
+  width: 60%;
+  height: 600%;
+  top: 0%;
+  right: 0%;
+  display: none;
+  background: #373737;
+  z-index: 5;
+  overflow: hidden;
+  margin-right: -1px;
+  border-radius: 0 19px 5px 5px;
+  border-style: solid;
+  border-color: grey;
+  border-width: 0 1px 1px 1px ;
+  box-shadow: 2px 2px 5px grey;
+}
+.movable-yea {
+  top: -40%;
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+.yeaobj {
+  cursor: pointer;
+  border-style: solid;
+  border-color: #C6C6C6;
+  border-width: 0 0 1px 0;
+  margin-top: -1px;
+  width: 100%;
+  height: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.yeaobj:hover{
+  background: black;
+  border-width:1px;
+  z-index: 6;
+  animation-name: yeahov;
+  animation-duration: 1s;
+  animation-iteration-count: 2;
+  animation-direction: alternate;
+  animation-timing-function: ease-out;
+}
+@keyframes yeahov {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.1); }
+}
+.aweek_fl {
+  box-shadow: 0px 2px 5px grey;
+  z-index: 3;
+  margin-bottom: 3px;
+}
+.aweek, .aweek_fl{
+  width: 100%;
+  padding: 0px;
+  display: flex;
+}
+.week0 .days {
+  border-style: solid;
+  border-color: #EFEFEF;
+  border-width: 0.5px 0.5px 0 0.5px ;
+}
+.aweek:last-child {
+  margin-top: 1px;
+  margin-bottom: 3px;
+}
+.aweek:last-child .days{
+  border-style: solid;
+  border-color: #EFEFEF;
+  border-width: 0 0.5px 0.5px 0.5px ;
+}
+.aweek:last-child .aday:first-child{ border-radius: 0 0 0 14px; }
+.aweek:last-child .aday:last-child{ border-radius: 0 0 14px 0; }
+.aweek:not(:last-child) {
+  border-style: solid;
+  border-color: #EFEFEF;
+  border-width: 0 0 1px 0;
+}
+.dayb{
+  width: calc(1/7 * 100%);
+  padding-top: calc(1/7 * 100%);
+  border-style: solid;
+  border-color: #EFEFEF;
+  border-width: 0.5px
+}
+.days:not(.daysnw) {
+  cursor: pointer;
+  position: relative;
+  width: calc(1/7 * 100%);
+  padding-top: calc(1/7 * 100%);
+  background: #C6C6C6;
+  border-style: solid;
+  border-color: #EFEFEF;
+  border-width: 0.5px;
+  margin: -0.5px 0 -0.5px 0;
+}
+.daysnw{
+  cursor: pointer;
+  position: relative;
+  width: calc(1/7 * 100%);
+  padding-top: calc(1/7 * 100%);
+  background: #FF9491;
+  border-style: solid;
+  border-color: #EFEFEF;
+  border-width: 0.5px;
+  margin: -0.5px 0 -0.5px 0;
+}
+.days:not(.daysnw):hover {
+  transition: 0.4s;
+  background: #A6A6A6;
+}
+.daysnw:hover {
+  transition: 0.4s;
+  background: #FF6565;
+}
+.days:hover {
+  z-index: 4;
+  transform: scale(1.2);
+  border-radius: 0 !important;
+}
+.days span {
+  pointer-events: none;
+  touch-action: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.getday {
+  position: relative;
+  width: calc(1/7 * 100%);
+  padding-top: calc(1/7 * 60%);
+  background: #7F7F7F;
+  color: white;
+}
+.getday:first-child {
+  border-style: solid;
+  border-color: black;
+  border-width: 0 0 1px 0;
+}
+.getday:not(:nth-child(1)) {
+  border-style: solid;
+  border-color: black;
+  border-width: 0 0 1px 1px;
+}
+.getday span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.scrllm_rail {
+  pointer-events: auto;
+  touch-action: auto;
+  border-radius: 20px;
+  background: #EFEFEF;
+  width: 10%;
+  height:100%;
+  position: absolute;
+  right: 0%;
+  top: 0%;
+}
+.scrlly_rail {
+  pointer-events: auto;
+  touch-action: auto;
+  border-radius: 20px;
+  background: #EFEFEF;
+  width: 10%;
+  height:90%;
+  position: absolute;
+  right: 0%;
+  top: 5%;
+}
+.scroller{
+  pointer-events: auto;
+  touch-action: auto;
+  border-radius: 20px;
+  background: #A2A2A2;
+  width: calc(10% - 2px);
+  height:40%;
+  position: absolute;
+  right: 0%;
+  border-style: solid;
+  border-width: 1px;
+  box-shadow: 0px 5px 10px grey;
+}
+.scrll_m { top: 0%; }
+.scrll_y { top: 30%; }
+
+/* ---------------------------------------------------------------------- */
+
+  @media (max-height: 700px) and (min-height: 600px) and (min-device-width: 900px) {
+    .fmbox {
+      height: 90vh;
+    }
+  }
+  @media (max-height: 600px) and (min-device-width: 900px) {
+    .fmbox {
+      height: 100vh;
+    }
+  }
+  @media (max-width: 400px) and (min-device-width: 900px) {
+    .fmbox {
+      width:70% !important;
+    }
+    .days {
+      font-size: 0.7rem;
+    }
+    .getday {
+      font-size: 0.6rem;
+    }
+  }
+
+  @media (min-width: 800px) and (min-height: 600px) and (min-device-width: 900px) {
+    #calender{
+      width: 400px !important;
+      padding-top: 0 !important;
+    }
+    .cal-topbar {
+      font-size: 1.4rem;
+    }
+  }
+  @media (min-width: 500px) and (max-width: 800px) and (min-height: 600px) and (min-device-width: 900px) {
+    .getday {
+      font-size: 0.9rem;
+    }
+    .cal-topbar {
+      font-size: 1.2rem;
+    }
+  }
+  @media (min-width: 400px) and (max-width: 500px) and (min-height: 600px) and (min-device-width: 900px) {
+    .fmbox {
+      width:60% !important;
+    }
+    .days {
+      font-size: 0.8rem;
+    }
+    .getday {
+      font-size: 0.7rem;
+    }
+  }
+  @media (min-width: 400px) and (max-height: 600px) and (min-height: 500px) and (min-device-width: 900px) {
+    #calender{
+      width: 300px !important;
+      padding-top: 0 !important;
+    }
+    .days, .getday {
+      font-size: 0.8rem;
+    }
+  }
+  @media (min-width: 400px) and (max-height: 500px) and (min-device-width: 900px) {
+    #calender{
+      width: 250px !important;
+      padding-top: 0 !important;
+    }
+    .days, .getday {
+      font-size: 0.75rem;
+    }
+  }
+/* ---------------------------------------------------------------------- */
+
+  @media (max-device-height: 600px) {
+    .fmbox {
+      height: 100vh;
+    }
+  }
+  @media (min-device-height: 500px) and (max-device-height: 600px) {
+    .fmbox {
+      height: 90vh;
+    }
+  }
+  @media (max-device-width: 900px) and (min-device-width: 700px) and (min-device-height: 500px)  {
+    .fmbox{
+      width:42% !important;
+    }
+    .cal-topbar {
+      font-size: 1.5rem;
+    }
+  }
+  @media (max-device-width: 700px) and (min-device-width: 500px) and (min-device-height: 500px)  {
+    .fmbox{
+      width:55% !important;
+    }
+    .cal-topbar {
+      font-size: 1.6rem;
+    }
+    .days {
+      font-size: 1.5rem;
+    }
+    .getday {
+      font-size: 1.3rem;
+    }
+  }
+
+  @media (max-device-width: 900px) and (min-device-width: 700px) and (max-device-height: 500px)  {
+    .fmbox{
+      width:30% !important;
+    }
+  }
+  @media (max-device-width: 700px) and (min-device-width: 500px) and (max-device-height: 500px)  {
+    .fmbox{
+      width:38% !important;
+    }
+    .cal-topbar {
+      font-size: 1.8rem;
+    }
+    .days {
+      font-size: 1.4rem;
+    }
+    .getday {
+      font-size: 1.2rem;
+    }
+  }
+  @media (max-device-width: 500px) {
+    .fmbox{
+      width:80% !important;
+    }
+    .cal-topbar {
+      font-size: 2.5rem;
+    }
+    .days {
+      font-size: 1.8rem;
+    }
+    .getday {
+      font-size: 1.8rem;
+    }
+  }
+}
