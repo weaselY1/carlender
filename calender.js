@@ -5,8 +5,8 @@ window.onload = function () {
   const dobj_ = {
       now: new Date,
       fn: function() { return this.now.getDate() + "-" + (this.now.getMonth() + 1) + "-" + this.now.getFullYear() },
-      fw: function(ny, nm) { return (new Date(ny, (parseInt(nm)-1), 1)).getDay(); },
-      nd: function(ny, nm){ return new Date(ny, (parseInt(nm)), 0).getDate(); },
+      fw: function(a1, a2) { return (new Date(a1, parseInt(a2), 1)).getDay(); },
+      nd: function(a1, a2){ return new Date(a1, (parseInt(a2)), 0).getDate(); },
       month_maxoffset: 0,
       mouseDown: false,
       old_mouseY: 0,
@@ -56,11 +56,11 @@ window.onload = function () {
               document.querySelector(".cal-topbar-mon").innerHTML = e.target.innerText;
               document.querySelector(".monthoption").style.display = "none";
 
-              const __month = monthly.indexOf(e.target.innerText.replace(/\s/g, '')) + 1;
+              const __month = monthly.indexOf(e.target.innerText.replace(/\s/g, ''));
               const __year = document.querySelector(".cal-topbar-yea").innerText;
 
-              const nfd_ = this.fw(__year, __month);
-              const nnd_ = this.nd(__year, __month);
+              const nfd_ = this.fw(__year, __month + 1);
+              const nnd_ = this.nd(__year, __month + 1);
 
               const aweek = document.querySelectorAll(".aweek");
               for (var i = 0; i < aweek.length; i++) {
@@ -97,7 +97,7 @@ window.onload = function () {
               const calid = document.getElementById('calender');
               calid.insertAdjacentHTML("beforeend", daya_)
 
-              if (__month == (this.now.getMonth() + 1) && __year == this.now.getFullYear()) {
+              if ((__month == this.now.getMonth()) && __year == this.now.getFullYear()) {
                   const days = document.querySelectorAll(".days");
                   days[this.now.getDate()-1].classList.add("daysnw");
               }
@@ -142,11 +142,11 @@ window.onload = function () {
                 document.querySelector(".cal-topbar-yea").innerHTML = e.target.innerText;
                 document.querySelector(".yeaoption").style.display = "none";
 
-                let __month = monthly.indexOf(document.querySelector(".cal-topbar-mon").innerText) + 1;
+                let __month = monthly.indexOf(document.querySelector(".cal-topbar-mon").innerText);
                 let __year = document.querySelector(".cal-topbar-yea").innerText;
 
                 const nfd_ = dobj_.fw(__year, __month);
-                const nnd_ = dobj_.nd(__year, __month);
+                const nnd_p = dobj_.nd(__year, __month);
 
                 const aweek = document.querySelectorAll(".aweek");
                 for (var i = 0; i < aweek.length; i++) {
@@ -154,7 +154,7 @@ window.onload = function () {
                 }
 
                 let dayx_ = 1; let daya_ = "";
-                const nweek_ = Math.ceil((nfd_ + nnd_)/7);
+                const nweek_ = Math.ceil((nfd_ + nnd_p)/7);
                 for (var i = 0; i < nweek_; i++) {
                     if (i == 0)  {
                         let frow_ = "";
@@ -169,7 +169,7 @@ window.onload = function () {
                     }else {
                         let frow_ = "";
                         for (var iy = 0; iy < 7; iy++) {
-                          if (dayx_ > nnd_) {
+                          if (dayx_ > nnd_p) {
                               frow_ = frow_ + "<div class='aday dayb'></div>";
                           }else {
                             frow_ = frow_ + `<div class='aday days unable_sl' id='day${dayx_-1}'><span>${dayx_}</span></div>`;
@@ -463,31 +463,35 @@ window.onload = function () {
       }
   }
 
+  // ---------------------------------------------------------------- click as init
+
   const mn_ = document.getElementById("calender_bas");
   const bd_ = document.getElementsByTagName("body");
+
+  // ---------------------------------------------------------------- build up DOM element
 
   const slidebar_DOM_m ="<span class='scrllm_rail unable_sl'></span><span class='unable_sl scroller scrll_m'></span>"
   const slidebar_DOM_y ="<span class='scrlly_rail unable_sl'></span><span class='unable_sl scroller scrll_y'></span>"
 
-  let ptm_ = "";
-  for (var i = 0; i < 12; i++) {
+  // DOM for Month
+  let ptm_ = ""; for (var i = 0; i < 12; i++) {
     ptm_ = ptm_ + `<div class='monthobj unable_sl'> ${monthly[i]} </div>`;
-  }
-  let pty_ = "";
-  for (var i = 0; i < 9; i++) {
+  };
+  // DOM for Year
+  let pty_ = ""; for (var i = 0; i < 9; i++) {
     pty_ = pty_ + `<div class='yeaobj unable_sl'> ${dobj_.now.getFullYear() - 4 + i} </div>`;
-  }
-  let ptw_ = "";
-  for (var i = 0; i < 7; i++) {
+  };
+  let ptw_ = ""; for (var i = 0; i < 7; i++) {
     ptw_ = ptw_ + `<div class='getday unable_sl'><span> ${weekday[i]} </span></div>`;
-  }
+  };
 
-  const nfd_ = dobj_.fw(dobj_.now.getFullYear(), dobj_.now.getMonth() + 1);
+  const nfd_ = dobj_.fw(dobj_.now.getFullYear(), dobj_.now.getMonth());
   const nnd_ = dobj_.nd(dobj_.now.getFullYear(), dobj_.now.getMonth() + 1);
 
   let dayx_ = 1; let daya_ = "";
   const nweek_ = Math.ceil((nfd_ + nnd_)/7);
   for (var i = 0; i < nweek_; i++) {
+    // first week
     if (i == 0)  {
         let frow_ = "";
         for (var ix = 0; ix < nfd_; ix++) {
@@ -497,7 +501,7 @@ window.onload = function () {
             frow_ = frow_ + `<div class='aday days unable_sl' id='day${dayx_-1}'><span>${dayx_}</span></div>`;
             dayx_ = dayx_ + 1;
         }
-        daya_ = daya_ + `<div class='aweek week${i}'>${frow_}</div>`;
+        daya_ = `<div class='aweek week${i}'>${frow_}</div>`;
     }else {
         let frow_ = "";
         for (var iy = 0; iy < 7; iy++) {
@@ -588,7 +592,7 @@ window.onload = function () {
           document.querySelector(".cal-topbar-mon").innerHTML = monthly[dobj_.now.getMonth()];
           document.querySelector(".cal-topbar-yea").innerHTML = dobj_.now.getFullYear();
 
-          const nfd_ = dobj_.fw(dobj_.now.getFullYear(), dobj_.now.getMonth() + 1);
+          const nfd_ = dobj_.fw(dobj_.now.getFullYear(), dobj_.now.getMonth());
           const nnd_ = dobj_.nd(dobj_.now.getFullYear(), dobj_.now.getMonth() + 1);
 
           const aweek = document.querySelectorAll(".aweek");
