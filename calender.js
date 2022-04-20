@@ -237,6 +237,14 @@ window.onload = function () {
       }
     }
   }
+
+  const mbtouch = {
+    old_touchX: 0,
+    old_touchY: 0,
+    mark_touchX: 0,
+    mark_touchY: 0
+  };
+
   let st_obj = false;
   let iter_y;
   let pick_targ;
@@ -520,7 +528,6 @@ window.onload = function () {
                     <div class='movable-mon'>${ptm_}</div> ${slidebar_DOM_m} </div>
                 <div class='yeaoption'>
                     <div class='movable-yea'>${pty_}</div> ${slidebar_DOM_y} </div>`
-
   const p_ =  ` <div class='calender_bg'>
                       <div class="fmbox">
                           <div id='calender'>
@@ -545,6 +552,9 @@ window.onload = function () {
   const days = document.querySelectorAll(".days");
   days[dobj_.now.getDate()-1].classList.add("daysnw");
 
+//--------------------------------------------------------
+//-----------------  Slide Event  ------------------------
+//--------------------------------------------------------
   document.querySelector(".monthoption").addEventListener('mousedown',  mdown, false);
   document.querySelector(".monthoption").addEventListener('mousemove',  mmove, false);
   document.querySelector(".monthoption").addEventListener('mouseup',  mupup, false);
@@ -553,6 +563,7 @@ window.onload = function () {
   document.querySelector(".monthoption").addEventListener('touchend',  mupup, false);
   document.querySelector(".monthoption").addEventListener("wheel", whler, false);
   document.querySelector(".monthoption").addEventListener("mouseout", dis_mnw, false);
+
   document.querySelector(".scrll_m").addEventListener('mousedown',  mdown_scrll, false);
   document.querySelector(".scrll_m").addEventListener('mousemove',  mmove_scrll, false);
   document.querySelector(".scrllm_rail").addEventListener('mousedown',  mdown_ra, false);
@@ -565,6 +576,7 @@ window.onload = function () {
   document.querySelector(".yeaoption").addEventListener('touchend',  yupup, false);
   document.querySelector(".yeaoption").addEventListener("wheel", yrwhr, false);
   document.querySelector(".yeaoption").addEventListener("mouseout", dis_yrw, false);
+
   document.querySelector(".scrll_y").addEventListener('mousedown',  ydown_scrll, false);
   document.querySelector(".scrll_y").addEventListener('mousemove',  ymove_scrll, false);
   document.querySelector(".scrlly_rail").addEventListener('mousedown',  ydown_ra, false);
@@ -705,11 +717,9 @@ window.onload = function () {
   });
   document.addEventListener('mousemove',function(e){
     st_obj  = false;
-
     if (dobj_.mouseDown && e.which == 1) {
         let offsetY;
         if (e.which == 1) { offsetY = dobj_.offsetY_fn(e); }
-        else if (e.touches) { offsetY = dobj_.offsetY_fn_touch(e); }
         dobj_.mmove_fn(e, offsetY);
     }else if (scm_.mouseDown_scrll && e.which == 1) {
         const scrOffset = e.clientY;
@@ -718,7 +728,7 @@ window.onload = function () {
     }
     if (yobj_.yr_mouseDown && e.which == 1) {
         const rect = document.querySelector(".yeaoption").getBoundingClientRect();
-        const offY = e.touches ? e.touches[0].clientY : e.clientY;
+        const offY = e.clientY;
         const offsetY = offY - rect.top;
         yobj_.nmove_fn(offsetY);
     }else if (scy_.mouseDown_scrll && e.which == 1) {
@@ -733,6 +743,7 @@ window.onload = function () {
           }
       }
 
+      console.log(st_obj);
       if (e.target.classList.contains("days") && st_obj && document.querySelector(".monthoption").style.display == "none" && document.querySelector(".yeaoption").style.display == "none") {
           if (e.which == 1) {
               const __month = monthly.indexOf(document.querySelector(".cal-topbar-mon").innerText) + 1;
@@ -740,14 +751,13 @@ window.onload = function () {
               document.querySelector(".calender_bg").style.display = "none";
           }
       }else {
-          if (!e.target.classList.contains('cal-topbar-mon') && (e.which == 1) && !e.target.classList.contains('monthobj') && !e.target.classList.contains('movable-mon') && !scm_.mscrllRD && !e.target.classList.contains('scrll_m') && st_obj) {
+          if (!e.target.classList.contains('cal-topbar-mon') && (e.which == 1) && !e.target.classList.contains('monthobj') && !e.target.classList.contains('movable-mon') && !scm_.mscrllRD && !e.target.classList.contains('scrll_m') ) {
               document.querySelector(".monthoption").style.display = "none";
           }
-          if (!e.target.classList.contains('cal-topbar-yea') && (e.which == 1) && !e.target.classList.contains('yeaobj') && !e.target.classList.contains('movable-yea') && !scy_.mscrllRD && !e.target.classList.contains('scrll_y') && st_obj) {
+          if (!e.target.classList.contains('cal-topbar-yea') && (e.which == 1) && !e.target.classList.contains('yeaobj') && !e.target.classList.contains('movable-yea') && !scy_.mscrllRD && !e.target.classList.contains('scrll_y') ) {
               document.querySelector(".yeaoption").style.display = "none";
           }
       }
-
 
       dobj_.mouseDown = false;
       scm_.mouseDown_scrll = false;
@@ -759,9 +769,29 @@ window.onload = function () {
       clearInterval(iter_y);
   });
   document.addEventListener('touchstart',function(e){
-    st_obj  = true;
+      mbtouch.old_touchX = e.touches[0].clientX;
+      mbtouch.old_touchY = e.touches[0].clientY;
+      st_obj  = true;
   });
   document.addEventListener('touchmove',function(e){
-    st_obj  = false;
+      st_obj  = false;
+      mbtouch.mark_touchX = mbtouch.mark_touchX + Math.abs(mbtouch.old_touchX - e.touches[0].clientX);
+      mbtouch.mark_touchY = mbtouch.mark_touchY + Math.abs(mbtouch.old_touchY - e.touches[0].clientY);
+
+      if (mbtouch.mark_touchX < 20 || mbtouch.mark_touchY < 20) {
+        console.log(5);
+        st_obj  = true;
+      }else {
+        console.log(9);
+      }
+
+      mbtouch.old_touchX = e.touches[0].clientX;
+      mbtouch.old_touchY = e.touches[0].clientY;
+  });
+  document.addEventListener('touchend',function(e){
+      mbtouch.old_touchX = 0;
+      mbtouch.old_touchY = 0;
+      mbtouch.mark_touchX = 0;
+      mbtouch.mark_touchY = 0;
   });
 };
